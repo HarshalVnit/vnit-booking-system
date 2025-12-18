@@ -1,22 +1,33 @@
 // 1. Import dependencies
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose'); // <--- NEW: Import Mongoose
+require('dotenv').config();           // <--- NEW: Import and configure dotenv
 
 // 2. Initialize the app
 const app = express();
 
-// 3. Middleware (Security & JSON parsing)
-app.use(express.json()); // Allows server to understand JSON data sent from frontend
-app.use(cors());         // Allows frontend (React) to talk to backend
+// 3. Middleware
+app.use(express.json());
+app.use(cors());
 
-// 4. A simple test route
-// When someone visits the root URL '/', send back a message.
+// 4. Database Connection  <--- NEW SECTION
+// We read the secret key from the .env file
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose.connect(MONGO_URI, {
+    // These settings prevent common warnings
+})
+.then(() => console.log('MongoDB Connected Successfully'))
+.catch((err) => console.error('MongoDB Connection Error:', err));
+
+// 5. Test Route
 app.get('/', (req, res) => {
     res.send('Hello from VNIT Booking Server!');
 });
 
-// 5. Start the server
-const PORT = 5000;
+// 6. Start Server
+const PORT = process.env.PORT || 5000; // Use port from .env or default to 5000
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
