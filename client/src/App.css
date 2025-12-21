@@ -1,6 +1,13 @@
-<<<<<<< HEAD
 /* --- VNIT CLEAN & CENTERED THEME --- */
 
+/* Fix layout mixing */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f4f4f9; /* Light grey background for better contrast */
+}
 /* 1. Global Basics */
 body {
   margin: 0;
@@ -99,5 +106,3 @@ th {
   background-color: #333;
   color: white;
 }
-=======
->>>>>>> feature/booking-form

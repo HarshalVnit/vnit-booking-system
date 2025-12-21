@@ -1,35 +1,61 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-
-// Import EVERYONE'S work
-import BookingForm from './pages/BookingForm';      // Your work
-import FacultyDashboard from './pages/FacultyDashboard'; // Your work
-import Login from './pages/Login';                  // M1's work
-import StudentStatus from './pages/StudentStatus';  // M1's work
-
-// (Note: If your files are still in 'src' and not 'pages', remove the '/pages' part above)
+import React, { useState } from 'react';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import BookingForm from './pages/BookingForm';
+import FacultyDashboard from './pages/FacultyDashboard';
+import StudentStatus from './pages/StudentStatus';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Footer from './components/Footer';
+import vnitLogo from './assets/vnit-logo-1.jpg';
 
 function App() {
-  return (
-    <Router>
-      <div style={{ padding: '20px' }}>
-        <nav style={{ marginBottom: '20px', padding: '10px', background: '#f8f9fa' }}>
-          <Link to="/" style={{ marginRight: '15px' }}>Student Booking</Link>
-          <Link to="/status" style={{ marginRight: '15px' }}>Check Status</Link>
-          <Link to="/login">Faculty Login</Link>
-        </nav>
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // --- NEW: Logout Function ---
+  const handleLogout = () => {
+    setIsAuthenticated(false); // Locks the dashboard
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      
+      {/* NAVBAR */}
+      <nav style={{ padding: '10px 40px', backgroundColor: '#002147', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <img src={vnitLogo} alt="VNIT Logo" style={{ height: '50px', borderRadius: '50%' }} />
+            <h2 style={{ margin: 0 }}>VNIT Guest House</h2>
+        </div>
+
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <Link to="/" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>Home</Link>
+          <Link to="/book" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>Book Room</Link>
+          <Link to="/status" style={{ color: 'white', textDecoration: 'none', fontWeight: '500' }}>Check Status</Link>
+          <Link to="/dashboard" style={{ color: '#f39c12', textDecoration: 'none', fontWeight: 'bold' }}>Faculty Login</Link>
+        </div>
+      </nav>
+
+      {/* MAIN CONTENT */}
+      <div style={{ flex: 1 }}>
         <Routes>
-          {/* Your Routes */}
-          <Route path="/" element={<BookingForm />} />
-          <Route path="/faculty" element={<FacultyDashboard />} />
-          
-          {/* M1's Routes */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/book" element={<BookingForm />} />
           <Route path="/status" element={<StudentStatus />} />
+          
+          <Route 
+            path="/login" 
+            element={<Login setIsAuthenticated={setIsAuthenticated} />} 
+          />
+          
+          {/* PROTECTED ROUTE: Passes the logout function to the dashboard */}
+          <Route 
+            path="/dashboard" 
+            element={isAuthenticated ? <FacultyDashboard onLogout={handleLogout} /> : <Navigate to="/login" />} 
+          />
         </Routes>
       </div>
-    </Router>
+
+      <Footer />
+    </div>
   );
 }
 

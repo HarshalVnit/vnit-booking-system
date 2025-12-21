@@ -1,49 +1,91 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+const Login = ({ setIsAuthenticated }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // HARDCODED SECURITY FOR NOW
-    if (email === 'admin@vnit.ac.in' && password === 'admin123') {
-      localStorage.setItem('isAdmin', 'true'); // Save the "Key"
-      alert('Login Successful!');
-      navigate('/faculty'); // Go to dashboard
-    } else {
-      alert('Invalid Credentials!');
-    }
-  };
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // --- SIMPLE HARDCODED CREDENTIALS ---
+        if (username === 'admin' && password === 'vnit123') {
+            setIsAuthenticated(true); // Unlock the app
+            navigate('/dashboard');   // Send to dashboard
+        } else {
+            setError('❌ Invalid Username or Password');
+        }
+    };
 
-  return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', textAlign: 'center' }}>
-      <h2>Faculty Login</h2>
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ padding: '10px' }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ padding: '10px' }}
-        />
-        <button type="submit" style={{ padding: '10px', backgroundColor: 'blue', color: 'white' }}>
-          Login
-        </button>
-      </form>
-    </div>
-  );
+    // Styles
+    const containerStyle = {
+        height: '80vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundImage: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        fontFamily: "'Segoe UI', sans-serif"
+    };
+    const cardStyle = {
+        padding: '40px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
+        textAlign: 'center',
+        width: '350px'
+    };
+    const inputStyle = {
+        width: '100%',
+        padding: '12px',
+        margin: '10px 0',
+        border: '1px solid #ccc',
+        borderRadius: '5px',
+        fontSize: '1rem',
+        boxSizing: 'border-box'
+    };
+    const btnStyle = {
+        width: '100%',
+        padding: '12px',
+        backgroundColor: '#002147',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        fontSize: '1.1rem',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        marginTop: '10px'
+    };
+
+    return (
+        <div style={containerStyle}>
+            <div style={cardStyle}>
+                <h2 style={{ color: '#002147', marginBottom: '20px' }}>🔐 Faculty Login</h2>
+                <form onSubmit={handleLogin}>
+                    <input 
+                        type="text" 
+                        placeholder="Username" 
+                        value={username} 
+                        onChange={(e) => setUsername(e.target.value)} 
+                        required 
+                        style={inputStyle}
+                    />
+                    <input 
+                        type="password" 
+                        placeholder="Password" 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                        style={inputStyle}
+                    />
+                    
+                    {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+                    
+                    <button type="submit" style={btnStyle}>Login</button>
+                </form>
+            </div>
+        </div>
+    );
 };
 
 export default Login;

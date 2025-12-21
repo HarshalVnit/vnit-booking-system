@@ -1,25 +1,19 @@
 const express = require('express');
 const router = express.Router();
-// Import the controller to use the functions
 const bookingController = require('../controllers/bookingController');
 
-// 1. Create a new booking (Student)
+// 1. Create Booking
 router.post('/', bookingController.createBooking);
 
-// 2. Get all pending bookings (Faculty Dashboard)
+// 2. Student Status (Changed from URL param to generic GET for Query Params)
+router.get('/student-lookup', bookingController.getStudentBookings);
+
+// 3. Faculty Routes
 router.get('/pending', bookingController.getPendingBookings);
-
-// --- NEW LINES START HERE ---
-
-// 3. Check which rooms are free (When clicking "Approve")
-router.get('/available', bookingController.getAvailableRooms);
-
-// 4. Approve and Assign Room (When clicking "Confirm")
+router.get('/available', bookingController.getAvailableRooms); // Dropdown logic
+router.get('/room-status', bookingController.getRoomStatus);   // NEW: General View logic
 router.put('/assign/:id', bookingController.assignRoom);
-
-// --- NEW LINES END HERE ---
-
-// 5. Reject booking (Update status only)
 router.put('/:id', bookingController.updateStatus);
+router.get('/allocated', bookingController.getAllocatedBookings);
 
 module.exports = router;
